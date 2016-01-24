@@ -176,6 +176,16 @@ public class ScheduleActivity extends AppCompatActivity {
         if (id == R.id.action_send) {
             sendData();
         }
+        if (id == R.id.action_delete){
+            sService.setSelection(0);
+            etName.setText("");
+            etId.setText("");
+            etEmail.setText("");
+            etCar.setText("");
+            etCarId.setText("");
+            tvDate.setText(dateEs);
+            sTime.setSelection(0);
+        }
 
         return super.onOptionsItemSelected(item);
     }
