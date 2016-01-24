@@ -33,7 +33,19 @@
 
     <string name="action_send">Enviar</string>
     <string name="action_delete">Borrar</string>
+    <string name="title_activity_list_date">ListDateActivity</string>
 
+    <!--activity_list_date-->
+    <string name="titlelistDate">Lista de Citas</string>
 
+    <!--introduction-->
+    <string name="introduction">Bienvenido a AutoAPP aquí puedes agendar tu revisión para el taller AutoAPP.\n\nCarrera 77 # 77 - 88\n Tel:788888 - 899999\nwww.autoapp.com</string>
+
+    <!--activity_main_drawer-->
+    <string name="drawer_service">Servicios</string>
+    <string name="drawer_info">Información</string>
+    <string name="drawer_schedule">Agendar Nueva</string>
+    <string name="drawer_about">Sobre AutoApp</string>
+    <string name="drawer_exit">Salir</string>
 
 </resources>

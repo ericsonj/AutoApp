@@ -21,6 +21,10 @@
         <activity
             android:name=".ScheduleActivity"
             android:label="@string/title_activity_schedule"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ListDateActivity"
+            android:label="@string/title_activity_list_date"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent runActivity = new Intent(MainActivity.this,ScheduleActivity.class);
+                Intent runActivity = new Intent(MainActivity.this, ListDateActivity.class);
                 startActivity(runActivity);
             }
         });
@@ -81,17 +81,16 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_about) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_schedule) {
+            Intent runActivity = new Intent(MainActivity.this, ListDateActivity.class);
+            startActivity(runActivity);
+        } else if (id == R.id.nav_exit) {
+            this.finish();
+        } else if (id == R.id.nav_info) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_service) {
 
         }
 

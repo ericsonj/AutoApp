@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/hint_name"
-                    android:inputType="textPersonName"
+                    android:inputType="textPersonName|textCapWords"
                     android:text="" />
 
             </LinearLayout>
@@ -135,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/hint_email"
-                    android:inputType="textEmailAddress"
+                    android:inputType="text"
                     android:text="" />
 
             </LinearLayout>
@@ -197,7 +197,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/hint_carId"
-                    android:inputType="text"
+                    android:inputType="text|textCapCharacters"
                     android:text="" />
 
             </LinearLayout>

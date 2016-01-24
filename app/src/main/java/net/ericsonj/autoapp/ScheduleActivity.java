@@ -2,7 +2,6 @@ package net.ericsonj.autoapp;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,8 +15,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.ericsonj.autoapp.myitemlist.MyItemListDate;
+import net.ericsonj.autoapp.myitemlist.MyItemListIntent;
 import net.ericsonj.autoapp.myspinner.MyItemSpinner;
 import net.ericsonj.autoapp.myspinner.MySpinnerAdapter;
+import net.ericsonj.autoapp.myspinner.MyTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,7 +30,7 @@ import java.util.Locale;
 
 public class ScheduleActivity extends AppCompatActivity {
 
-
+    private static final String TAG = ScheduleActivity.class.getSimpleName();
     public static final int DATE_DIALOG_ID = 999;
 
     private DatePickerDialog.OnDateSetListener datePickerListener;
@@ -102,17 +104,17 @@ public class ScheduleActivity extends AppCompatActivity {
 
     public void loadTimeOptiones() {
         timeOptions.clear();
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 8 + ":00   -- 24HS", 8));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 9 + ":00   -- 24HS", 9));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 10 + ":00   -- 24HS", 10));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 11 + ":00   -- 24HS", 11));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 12 + ":00   -- 24HS", 12));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 13 + ":00   -- 24HS", 13));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 14 + ":00   -- 24HS", 14));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 15 + ":00   -- 24HS", 15));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 16 + ":00   -- 24HS", 16));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 17 + ":00   -- 24HS", 17));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 18 + ":00   -- 24HS", 18));
+        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 8 + ":00   -- 24HS", new MyTime(8)));
+        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 9 + ":00   -- 24HS", new MyTime(9)));
+        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 10 + ":00   -- 24HS", new MyTime(10)));
+        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 11 + ":00   -- 24HS", new MyTime(11)));
+        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 12 + ":00   -- 24HS", new MyTime(12)));
+        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 13 + ":00   -- 24HS", new MyTime(13)));
+        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 14 + ":00   -- 24HS", new MyTime(14)));
+        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 15 + ":00   -- 24HS", new MyTime(15)));
+        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 16 + ":00   -- 24HS", new MyTime(16)));
+        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 17 + ":00   -- 24HS", new MyTime(17)));
+        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 18 + ":00   -- 24HS", new MyTime(18)));
     }
 
     private void addLayoutDateOnClick() {
@@ -171,8 +173,8 @@ public class ScheduleActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_send) {
+            sendData();
         }
 
         return super.onOptionsItemSelected(item);
@@ -184,6 +186,10 @@ public class ScheduleActivity extends AppCompatActivity {
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
         dateEs = formatDate.format(c.getTime());
+        selectedDay = c.getTime();
+        selectedDay.setHours(0);
+        selectedDay.setMinutes(0);
+        selectedDay.setSeconds(0);
     }
 
 
@@ -201,4 +207,57 @@ public class ScheduleActivity extends AppCompatActivity {
         return date;
     }
 
+    private void sendData() {
+
+        if (!validateFields()) {
+            return;
+        }
+        int imgId = services.get(sService.getSelectedItemPosition()).getImgId();
+        String title = services.get(sService.getSelectedItemPosition()).getTitle();
+        String name = etName.getText().toString();
+        String idName = etId.getText().toString();
+        String email = etEmail.getText().toString();
+        String car = etCar.getText().toString();
+        String carId = etCarId.getText().toString();
+        MyTime hour = (MyTime) timeOptions.get(sTime.getSelectedItemPosition()).getObject();
+        Date date = addHour(selectedDay, hour.getTime());
+        MyItemListDate itemDate = new MyItemListDate(imgId, title, name, idName, email, car, carId, date);
+        MyItemListIntent data3 = new MyItemListIntent(itemDate);
+        setResult(RESULT_OK, data3.getIntent());
+        finish();
+
+    }
+
+    public boolean validateFields() {
+        if (etName.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Debe ingresar su Nombre.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (etId.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Debe ingresar su numero de Cedula.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (etEmail.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Debe ingresar un Correo.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (etCar.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Debe ingresar al menos la marca del auto.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (etCarId.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Debe ingresar la placa del auto.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+    }
+
+
+    public Date addHour(Date date, int hour) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.HOUR, hour);
+        return cal.getTime();
+    }
 }
