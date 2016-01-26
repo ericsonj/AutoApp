@@ -7,7 +7,7 @@ import java.util.Locale;
 /**
  * Created by ejoseph on 1/23/16.
  */
-public class MyItemListDate implements MyItemList{
+public class MyItemListDate extends MyItemList{
 
     private int imgId;
     private String titleService;

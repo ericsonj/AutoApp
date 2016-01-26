@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AutoApp</string>
+    <string name="app_name">AutoBookingApp</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -17,7 +17,7 @@
     <string name="hint_name">ej: Nombre Apellido</string>
 
     <string name="label_email">Correo:</string>
-    <string name="hint_email">ej: autoapp@autoapp.com</string>
+    <string name="hint_email">ej: AutoBookingApp@AutoBookingApp.com</string>
 
     <string name="label_id">Cedula:</string>
     <string name="hint_id">ej: 1234567890</string>
@@ -39,13 +39,39 @@
     <string name="titlelistDate">Lista de Citas</string>
 
     <!--introduction-->
-    <string name="introduction">Bienvenido a AutoAPP aquí puedes agendar tu revisión para el taller AutoAPP.\n\nCarrera 77 # 77 - 88\n Tel:788888 - 899999\nwww.autoapp.com</string>
+    <string name="introduction">Bienvenido a AutoBookingApp aquí puedes agendar tu revisión para el taller AutoBookingApp.\n\nCarrera 77 # 77 - 88\n Tel:788888 - 899999\nwww.AutoBookingApp.com</string>
 
     <!--activity_main_drawer-->
     <string name="drawer_service">Servicios</string>
     <string name="drawer_info">Información</string>
     <string name="drawer_schedule">Agendar Nueva</string>
-    <string name="drawer_about">Sobre AutoApp</string>
+    <string name="drawer_about">Sobre AutoBookingApp</string>
     <string name="drawer_exit">Salir</string>
+    <string name="title_activity_service">ServiceActivity</string>
+    <string name="title_activity_about">AboutActivity</string>
+
+    <!--activity_service-->
+    <string name="titleService">Servicios</string>
+    <string name="title_activity_info">InfoActivity</string>
+
+    <!--activity_info-->
+    <string name="titleInfo">Información</string>
+    <string name="textinfo">AutoBookingApp\n\n
+
+AutoBookingApp  es una aplicación que te permite agendar tus revisiones automotrices en el taller AutobokingApp.\n\n
+
+Ubicación: Carrera 99 # 99 – 99\n\n
+
+Teléfono: +57 5577884\n\n
+
+Email: auto@autobookingapp.com\n\n
+
+www.autobokingapp.com\n\n
+
+Visite nuestra pagina web para mas información.</string>
+
+    <!--activity_abour-->
+    <string name="titleAbout">AutoBookingApp</string>
+
 
 </resources>

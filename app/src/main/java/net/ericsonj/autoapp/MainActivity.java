@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Service.getInstance().loadService();
     }
 
     @Override
@@ -82,16 +84,19 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_about) {
-            // Handle the camera action
+            Intent runActivity = new Intent(MainActivity.this, AboutActivity.class);
+            startActivity(runActivity);
         } else if (id == R.id.nav_schedule) {
             Intent runActivity = new Intent(MainActivity.this, ListDateActivity.class);
             startActivity(runActivity);
         } else if (id == R.id.nav_exit) {
             this.finish();
         } else if (id == R.id.nav_info) {
-
+            Intent runActivity = new Intent(MainActivity.this, InfoActivity.class);
+            startActivity(runActivity);
         } else if (id == R.id.nav_service) {
-
+            Intent runActivity = new Intent(MainActivity.this, ServiceActivity.class);
+            startActivity(runActivity);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -8,25 +8,24 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import net.ericsonj.autoapp.R;
 
 import java.util.List;
 
-
 /**
- * Created by ejoseph on 1/21/16.
+ * Created by ejoseph on 1/25/16.
  */
-public class MyListAdapter extends ArrayAdapter<MyItemListDate> {
+public class MyListAdapterService extends ArrayAdapter<MyItemListService> {
 
-    private List<MyItemListDate> items;
+    private List<MyItemListService> items;
     private Activity context;
 
-    public MyListAdapter(Activity context, List<MyItemListDate> objects) {
+    public MyListAdapterService(Activity context, List<MyItemListService> objects) {
         super(context, R.layout.my_item_list, objects);
         this.items = objects;
         this.context = context;
     }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -44,4 +43,5 @@ public class MyListAdapter extends ArrayAdapter<MyItemListDate> {
 
         return rowView;
     }
+
 }

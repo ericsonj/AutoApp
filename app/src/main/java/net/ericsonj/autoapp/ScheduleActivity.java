@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import net.ericsonj.autoapp.myitemlist.MyItemListDate;
 import net.ericsonj.autoapp.myitemlist.MyItemListIntent;
+import net.ericsonj.autoapp.myitemlist.MyItemListService;
 import net.ericsonj.autoapp.myspinner.MyItemSpinner;
 import net.ericsonj.autoapp.myspinner.MySpinnerAdapter;
 import net.ericsonj.autoapp.myspinner.MyTime;
@@ -92,14 +93,11 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     public void loadServicesOptions() {
-        services.add(new MyItemSpinner(R.drawable.ic_gears, "Servicio General"));
-        services.add(new MyItemSpinner(R.drawable.ic_oil, "Cambio de Aceite"));
-        services.add(new MyItemSpinner(R.drawable.ic_braket, "Revisión de frenos"));
-        services.add(new MyItemSpinner(R.drawable.ic_suspe, "Revisión de suspención"));
-        services.add(new MyItemSpinner(R.drawable.ic_motor, "Revisión de motor"));
-        services.add(new MyItemSpinner(R.drawable.ic_light, "Revisión de luces"));
-        services.add(new MyItemSpinner(R.drawable.ic_direction, "Revisión de dirección"));
-        services.add(new MyItemSpinner(R.drawable.ic_neumatic, "Revisión de neumaticos"));
+
+        for(MyItemListService s : Service.getInstance().getServices()){
+            services.add(new MyItemSpinner(s.getImgId(),s.getItemName()));
+        }
+
     }
 
     public void loadTimeOptiones() {
