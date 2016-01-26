@@ -160,14 +160,12 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@color/colorComplementary" />
 
-                <EditText
-                    android:id="@+id/editText_car"
+                <Spinner
+                    android:id="@+id/spinner_car"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/hint_car"
-                    android:inputType="text"
-                    android:text="" />
+                    android:layout_gravity="center_horizontal"
+                    android:spinnerMode="dropdown" />
 
             </LinearLayout>
 

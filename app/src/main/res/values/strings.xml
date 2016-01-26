@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Configuración</string>
     <string name="title_activity_schedule">ScheduleActivity</string>
 
 
@@ -22,7 +22,7 @@
     <string name="label_id">Cedula:</string>
     <string name="hint_id">ej: 1234567890</string>
 
-    <string name="label_car">Marca y Modelo:</string>
+    <string name="label_car">Marca:</string>
     <string name="hint_car">ej: Ferrari, FF 2015</string>
 
     <string name="label_carId">Placa:</string>
@@ -72,6 +72,20 @@ Visite nuestra pagina web para mas información.</string>
 
     <!--activity_abour-->
     <string name="titleAbout">AutoBookingApp</string>
+
+
+    <!--activity_settings-->
+    <string name="titleSetting">Configuración</string>
+    <string name="pref_name_title">Nombre:</string>
+    <string name="pref_id_title">Cedula:</string>
+    <string name="pref_email_title">Correo:</string>
+    <string name="pref_carId_title">Plata:</string>
+
+    <!--preference_key-->
+    <string name="key_pref_name">pref_name</string>
+    <string name="key_pref_id">pref_id</string>
+    <string name="key_pref_email">pref_email</string>
+    <string name="key_pref_carId">pref_carId</string>
 
 
 </resources>

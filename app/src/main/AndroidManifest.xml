@@ -38,6 +38,9 @@
             android:name=".AboutActivity"
             android:label="@string/title_activity_about"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".mypreferences.SettingsActivity"
+            android:label="@string/titleSetting"/>
     </application>
 
 </manifest>

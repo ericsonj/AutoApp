@@ -2,7 +2,9 @@ package net.ericsonj.autoapp;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -33,16 +35,19 @@ public class ScheduleActivity extends AppCompatActivity {
 
     private static final String TAG = ScheduleActivity.class.getSimpleName();
     public static final int DATE_DIALOG_ID = 999;
+    private SharedPreferences preferences;
+    private SharedPreferences prefCar;
 
     private DatePickerDialog.OnDateSetListener datePickerListener;
     private LinkedList<MyItemSpinner> services = new LinkedList<>();
     private LinkedList<MyItemSpinner> timeOptions = new LinkedList<>();
+    private LinkedList<MyItemSpinner> carOptions = new LinkedList<>();
     private LinearLayout linearLayoutDate;
     private Spinner sService;
+    private Spinner sCar;
     private EditText etName;
     private EditText etId;
     private EditText etEmail;
-    private EditText etCar;
     private EditText etCarId;
     private TextView tvDate;
     private Spinner sTime;
@@ -70,34 +75,46 @@ public class ScheduleActivity extends AppCompatActivity {
 
         loadServicesOptions();
         loadTimeOptiones();
-
+        loadCarOptions();
         loadCurrentCalendar();
-
 
         sService = (Spinner) findViewById(R.id.spinner_service);
         etName = (EditText) findViewById(R.id.editText_name);
         etId = (EditText) findViewById(R.id.editText_id);
         etEmail = (EditText) findViewById(R.id.editText_email);
-        etCar = (EditText) findViewById(R.id.editText_car);
+        sCar = (Spinner) findViewById(R.id.spinner_car);
         etCarId = (EditText) findViewById(R.id.editText_carId);
         tvDate = (TextView) findViewById(R.id.textView_date);
         tvDate.setText(dateEs);
         sTime = (Spinner) findViewById(R.id.spinner_time);
         linearLayoutDate = (LinearLayout) findViewById(R.id.linearLayout_date);
 
+//        Load Preferences
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        etName.setText(preferences.getString(getResources().getString(R.string.key_pref_name), ""));
+        etId.setText(preferences.getString(getResources().getString(R.string.key_pref_id), ""));
+        etEmail.setText(preferences.getString(getResources().getString(R.string.key_pref_email), ""));
+
+
         loadAdapterMySpinner();
         loadadapterMySpinnerTime();
+        loadadapterMySpinnerCar();
         addLayoutDateOnClick();
         addDatePicketListener();
+
+        prefCar = getSharedPreferences("car",MODE_PRIVATE);
+        int idListCar = prefCar.getInt("carItemPosition",0);
+        String sCarId = prefCar.getString("carId","");
+        sCar.setSelection(idListCar);
+        etCarId.setText(sCarId);
+
 
     }
 
     public void loadServicesOptions() {
-
-        for(MyItemListService s : Service.getInstance().getServices()){
-            services.add(new MyItemSpinner(s.getImgId(),s.getItemName()));
+        for (MyItemListService s : ServerData.getInstance().getServices()) {
+            services.add(new MyItemSpinner(s.getImgId(), s.getItemName()));
         }
-
     }
 
     public void loadTimeOptiones() {
@@ -114,6 +131,19 @@ public class ScheduleActivity extends AppCompatActivity {
         timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 17 + ":00   -- 24HS", new MyTime(17)));
         timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 18 + ":00   -- 24HS", new MyTime(18)));
     }
+
+    public void loadCarOptions() {
+        carOptions.clear();
+        for(MyItemSpinner s : ServerData.getInstance().getCars()){
+            carOptions.add(s);
+        }
+    }
+
+    private void loadadapterMySpinnerCar() {
+        MySpinnerAdapter adapter = new MySpinnerAdapter(this, carOptions);
+        sCar.setAdapter(adapter);
+    }
+
 
     private void addLayoutDateOnClick() {
         linearLayoutDate.setOnClickListener(new View.OnClickListener() {
@@ -174,12 +204,11 @@ public class ScheduleActivity extends AppCompatActivity {
         if (id == R.id.action_send) {
             sendData();
         }
-        if (id == R.id.action_delete){
+        if (id == R.id.action_delete) {
             sService.setSelection(0);
             etName.setText("");
             etId.setText("");
             etEmail.setText("");
-            etCar.setText("");
             etCarId.setText("");
             tvDate.setText(dateEs);
             sTime.setSelection(0);
@@ -225,13 +254,20 @@ public class ScheduleActivity extends AppCompatActivity {
         String name = etName.getText().toString();
         String idName = etId.getText().toString();
         String email = etEmail.getText().toString();
-        String car = etCar.getText().toString();
+        String car = (String)carOptions.get(sCar.getSelectedItemPosition()).getObject();
         String carId = etCarId.getText().toString();
         MyTime hour = (MyTime) timeOptions.get(sTime.getSelectedItemPosition()).getObject();
         Date date = addHour(selectedDay, hour.getTime());
         MyItemListDate itemDate = new MyItemListDate(imgId, title, name, idName, email, car, carId, date);
         MyItemListIntent data3 = new MyItemListIntent(itemDate);
         setResult(RESULT_OK, data3.getIntent());
+
+        //save carSettings
+        SharedPreferences.Editor editor = prefCar.edit();
+        editor.putInt("carItemPosition",sCar.getSelectedItemPosition());
+        editor.putString("carId", etCarId.getText().toString());
+        editor.commit();
+        Toast.makeText(this, "Información de auto guardada",Toast.LENGTH_SHORT).show();
         finish();
 
     }
@@ -249,10 +285,7 @@ public class ScheduleActivity extends AppCompatActivity {
             Toast.makeText(this, "Debe ingresar un Correo.", Toast.LENGTH_LONG).show();
             return false;
         }
-        if (etCar.getText().toString().trim().isEmpty()) {
-            Toast.makeText(this, "Debe ingresar al menos la marca del auto.", Toast.LENGTH_LONG).show();
-            return false;
-        }
+
         if (etCarId.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, "Debe ingresar la placa del auto.", Toast.LENGTH_LONG).show();
             return false;

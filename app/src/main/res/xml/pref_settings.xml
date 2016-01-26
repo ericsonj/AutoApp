@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:inputType="textCapWords"
+        android:key="@string/key_pref_name"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_name_title" />
+
+    <EditTextPreference
+        android:capitalize="words"
+        android:inputType="textWebEmailAddress"
+        android:key="@string/key_pref_email"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_email_title" />
+
+    <EditTextPreference
+        android:inputType="number"
+        android:key="@string/key_pref_id"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_id_title" />
+
+
+
+    <!--<EditTextPreference-->
+        <!--android:capitalize="words"-->
+        <!--android:inputType="textCapCharacters"-->
+        <!--android:key="@string/key_pref_carId"-->
+        <!--android:maxLines="1"-->
+        <!--android:selectAllOnFocus="true"-->
+        <!--android:singleLine="true"-->
+        <!--android:title="@string/pref_carId_title" />-->
+
+</PreferenceScreen>
