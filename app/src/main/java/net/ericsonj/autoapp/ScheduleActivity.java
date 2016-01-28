@@ -37,7 +37,6 @@ public class ScheduleActivity extends AppCompatActivity {
     public static final int DATE_DIALOG_ID = 999;
     private SharedPreferences preferences;
     private SharedPreferences prefCar;
-
     private DatePickerDialog.OnDateSetListener datePickerListener;
     private LinkedList<MyItemSpinner> services = new LinkedList<>();
     private LinkedList<MyItemSpinner> timeOptions = new LinkedList<>();

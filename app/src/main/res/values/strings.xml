@@ -87,5 +87,13 @@ Visite nuestra pagina web para mas información.</string>
     <string name="key_pref_email">pref_email</string>
     <string name="key_pref_carId">pref_carId</string>
 
+    <!--activity_about-->
+    <string name="textabout">AutoBookingApp es una aplicación que busca revolucionar
+        el sistema actual de agendamiento incluyendo a nuestros clientes en el mundo
+        digital, esta es una idea de negocio de tres emprendedores de la Universidad
+        Sergio Arboleda.\n\n
+        Viviana Rendon\n
+        Carolina Rodriguez\n
+        Jadwer Montagut</string>
 
 </resources>
