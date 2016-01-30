@@ -1,8 +1,10 @@
 package net.ericsonj.autoapp;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,10 +15,32 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.ericsonj.autoapp.elements.ListService;
+import net.ericsonj.autoapp.elements.RequestMessage;
+import net.ericsonj.autoapp.elements.Service;
+import net.ericsonj.autoapp.myitemlist.MyItemListService;
 import net.ericsonj.autoapp.mypreferences.SettingsActivity;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +67,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ServerData.getInstance().loadService();
+        RequestMessage message = new RequestMessage("OK","getServices");
+        AsyncTackREST rest = new AsyncTackREST();
+        rest.execute(message);
+
         ServerData.getInstance().loadcars();
     }
 
@@ -105,4 +132,69 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public void updateList(ListService s){
+
+        try{
+            LinkedList<Service> services = s.getList();
+            LinkedList<MyItemListService> itemService = new LinkedList<>();
+            for(Service serv : services){
+                itemService.add(new MyItemListService(ServerData.getInstance().getIcon(serv.getNameService()),serv.getNameService(),String.valueOf(serv.getId())));
+            }
+            ServerData.getInstance().loadServices(itemService);
+        }catch (Exception e){
+            ServerData.getInstance().loadService();
+        }
+
+    }
+
+    public class AsyncTackREST extends AsyncTask<RequestMessage,String,ListService> {
+
+        @Override
+        protected ListService doInBackground(RequestMessage... params) {
+            ListService result = null;
+            try {
+                result =  connect(ServerData.SERVER_URL_GETSERVICES, params[0], RequestMessage.class, ListService.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.v(TAG, e.toString());
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(ListService s) {
+            Log.v(TAG, "DESPUÉS de CANCELAR la descarga. Se han descarcado " + s + " imágenes. Hilo PRINCIPAL");
+            updateList(s);
+        }
+
+        public <Q, A> A connect(String url, Q query, Class<Q> qClazz, Class<A> aClazz) throws IOException {
+
+            ObjectMapper mapper = new ObjectMapper();
+            HttpParams htpp = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(htpp, 30000);
+            HttpConnectionParams.setSoTimeout(htpp, 30000);
+            HttpClient httpClient = new DefaultHttpClient(htpp);
+            HttpPost post;
+            post = new HttpPost(url);
+            post.setHeader("Content-Type", "application/json");
+            post.setHeader("Accept", "application/json");
+            StringEntity entity = new StringEntity(mapper.writeValueAsString(query), "UTF-8");
+            post.setEntity(entity);
+            HttpResponse resp = httpClient.execute(post);
+            InputStream is = resp.getEntity().getContent();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte array[] = new byte[1024];
+            int readId;
+            while ((readId = is.read(array)) > 0) {
+                bos.write(array, 0, readId);
+            }
+            String strResponse = new String(bos.toByteArray());
+            A respValue = mapper.readValue(strResponse, aClazz);
+            return respValue;
+
+        }
+
+    }
+
 }

@@ -3,10 +3,12 @@ package net.ericsonj.autoapp;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +19,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.ericsonj.autoapp.elements.ListService;
+import net.ericsonj.autoapp.elements.RequestMessage;
+import net.ericsonj.autoapp.elements.ResponseMessage;
+import net.ericsonj.autoapp.elements.Service;
+import net.ericsonj.autoapp.elements.UserBooking;
 import net.ericsonj.autoapp.myitemlist.MyItemListDate;
 import net.ericsonj.autoapp.myitemlist.MyItemListIntent;
 import net.ericsonj.autoapp.myitemlist.MyItemListService;
@@ -24,6 +33,18 @@ import net.ericsonj.autoapp.myspinner.MyItemSpinner;
 import net.ericsonj.autoapp.myspinner.MySpinnerAdapter;
 import net.ericsonj.autoapp.myspinner.MyTime;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -112,7 +133,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
     public void loadServicesOptions() {
         for (MyItemListService s : ServerData.getInstance().getServices()) {
-            services.add(new MyItemSpinner(s.getImgId(), s.getItemName()));
+            services.add(new MyItemSpinner(s.getImgId(), s.getItemName(),s.getItemDetail()));
         }
     }
 
@@ -250,6 +271,7 @@ public class ScheduleActivity extends AppCompatActivity {
         }
         int imgId = services.get(sService.getSelectedItemPosition()).getImgId();
         String title = services.get(sService.getSelectedItemPosition()).getTitle();
+        long service_id = Long.parseLong((String)services.get(sService.getSelectedItemPosition()).getObject());
         String name = etName.getText().toString();
         String idName = etId.getText().toString();
         String email = etEmail.getText().toString();
@@ -263,11 +285,16 @@ public class ScheduleActivity extends AppCompatActivity {
 
         //save carSettings
         SharedPreferences.Editor editor = prefCar.edit();
-        editor.putInt("carItemPosition",sCar.getSelectedItemPosition());
+        editor.putInt("carItemPosition", sCar.getSelectedItemPosition());
         editor.putString("carId", etCarId.getText().toString());
         editor.commit();
         Toast.makeText(this, "Información de auto guardada",Toast.LENGTH_SHORT).show();
-        finish();
+
+        UserBooking userBooking = new UserBooking(service_id,name,idName,email,car,carId,date);
+        AsyncTackREST rest = new AsyncTackREST();
+        rest.execute(userBooking);
+
+//        finish();
 
     }
 
@@ -293,11 +320,67 @@ public class ScheduleActivity extends AppCompatActivity {
         return true;
     }
 
-
     public Date addHour(Date date, int hour) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         cal.add(Calendar.HOUR, hour);
         return cal.getTime();
     }
+
+    public void updateList(ResponseMessage s){
+        if(s.isIsSuccessful()){
+            Toast.makeText(this, "Envio de datos correcto", Toast.LENGTH_SHORT).show();
+        }
+        finish();
+    }
+
+    public class AsyncTackREST extends AsyncTask<UserBooking,String,ResponseMessage> {
+
+        @Override
+        protected ResponseMessage doInBackground(UserBooking... params) {
+            ResponseMessage result = null;
+            try {
+                result =  connect(ServerData.SERVER_URL_BOOKING, params[0], UserBooking.class, ResponseMessage.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.v(TAG, e.toString());
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(ResponseMessage s) {
+            Log.v(TAG, "DESPUÉS de CANCELAR la descarga. Se han descarcado " + s + " imágenes. Hilo PRINCIPAL");
+            updateList(s);
+        }
+
+        public <Q, A> A connect(String url, Q query, Class<Q> qClazz, Class<A> aClazz) throws IOException {
+
+            ObjectMapper mapper = new ObjectMapper();
+            HttpParams htpp = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(htpp, 30000);
+            HttpConnectionParams.setSoTimeout(htpp, 30000);
+            HttpClient httpClient = new DefaultHttpClient(htpp);
+            HttpPost post;
+            post = new HttpPost(url);
+            post.setHeader("Content-Type", "application/json");
+            post.setHeader("Accept", "application/json");
+            StringEntity entity = new StringEntity(mapper.writeValueAsString(query), "UTF-8");
+            post.setEntity(entity);
+            HttpResponse resp = httpClient.execute(post);
+            InputStream is = resp.getEntity().getContent();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte array[] = new byte[1024];
+            int readId;
+            while ((readId = is.read(array)) > 0) {
+                bos.write(array, 0, readId);
+            }
+            String strResponse = new String(bos.toByteArray());
+            A respValue = mapper.readValue(strResponse, aClazz);
+            return respValue;
+
+        }
+
+    }
+
 }
