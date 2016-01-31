@@ -15,8 +15,12 @@ public class ServerData {
 
     private static ServerData ourInstance = new ServerData();
 
-    public static final String SERVER_URL_GETSERVICES = "http://192.168.0.101:8084/AutoBookingWeb/rest/autobookingserver/requestService";
-    public static final String SERVER_URL_BOOKING = "http://192.168.0.101:8084/AutoBookingWeb/rest/autobookingserver/requestBooking";
+    public static String SERVER = "http://ericsonj.net:8084/";
+    public static String SERVER_LOCAL = "http://192.168.88.252:8084/";
+    public static  String SERVER_URL_ROOT = SERVER+"AutoBookingWeb/rest/autobookingserver/";
+    public static  String SERVER_URL_GETSERVICES = SERVER_URL_ROOT+"requestService";
+    public static  String SERVER_URL_BOOKING = SERVER_URL_ROOT+"requestBooking";
+    public static  String SERVER_URL_REQUESTDATE = SERVER_URL_ROOT+"requestDate";
 
     public static ServerData getInstance() {
         return ourInstance;
@@ -26,14 +30,14 @@ public class ServerData {
     }
 
     public void loadService(){
-        services.add(new MyItemListService(R.drawable.ic_gears, "Servicio General",""));
-        services.add(new MyItemListService(R.drawable.ic_oil, "Cambio de Aceite",""));
-        services.add(new MyItemListService(R.drawable.ic_braket, "Revisión de frenos",""));
-        services.add(new MyItemListService(R.drawable.ic_suspe, "Revisión de suspención",""));
-        services.add(new MyItemListService(R.drawable.ic_motor, "Revisión de motor",""));
-        services.add(new MyItemListService(R.drawable.ic_light, "Revisión de luces",""));
-        services.add(new MyItemListService(R.drawable.ic_direction, "Revisión de dirección",""));
-        services.add(new MyItemListService(R.drawable.ic_neumatic, "Revisión de neumaticos",""));
+        services.add(new MyItemListService(R.drawable.ic_gears, "Servicio General","1"));
+        services.add(new MyItemListService(R.drawable.ic_oil, "Cambio de Aceite","2"));
+        services.add(new MyItemListService(R.drawable.ic_braket, "Revisión de frenos","3"));
+        services.add(new MyItemListService(R.drawable.ic_suspe, "Revisión de suspención","4"));
+        services.add(new MyItemListService(R.drawable.ic_motor, "Revisión de motor","5"));
+        services.add(new MyItemListService(R.drawable.ic_light, "Revisión de luces","6"));
+        services.add(new MyItemListService(R.drawable.ic_direction, "Revisión de dirección","7"));
+        services.add(new MyItemListService(R.drawable.ic_neumatic, "Revisión de neumaticos","8"));
     }
 
     public void loadServices(LinkedList<MyItemListService> services){

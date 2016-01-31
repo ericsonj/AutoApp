@@ -1,8 +1,10 @@
 package net.ericsonj.autoapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private SharedPreferences preferences;
+    private String name= "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +53,20 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent runActivity = new Intent(MainActivity.this, ListDateActivity.class);
-                startActivity(runActivity);
+                name = preferences.getString(getResources().getString(R.string.key_pref_name), "");
+                if(name.isEmpty()){
+                    Intent runActivity = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(runActivity);
+                }else{
+                    Intent runActivity = new Intent(MainActivity.this, ListDateActivity.class);
+                    startActivity(runActivity);
+                }
             }
         });
 

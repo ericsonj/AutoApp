@@ -328,8 +328,12 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     public void updateList(ResponseMessage s){
-        if(s.isIsSuccessful()){
-            Toast.makeText(this, "Envio de datos correcto", Toast.LENGTH_SHORT).show();
+        if(s != null){
+            if(s.isIsSuccessful()){
+                Toast.makeText(this, "Servicio Agendado ", Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(this, "No agendado, revise que cuente con una conexion de Internet", Toast.LENGTH_LONG).show();
         }
         finish();
     }

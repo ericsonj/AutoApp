@@ -73,6 +73,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/hint_name"
+                    android:editable="false"
                     android:inputType="textPersonName|textCapWords"
                     android:text="" />
 
@@ -104,6 +105,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/hint_id"
+                    android:editable="false"
                     android:inputType="number"
                     android:text="" />
 
@@ -135,6 +137,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/hint_email"
+                    android:editable="false"
                     android:inputType="text"
                     android:text="" />
 
