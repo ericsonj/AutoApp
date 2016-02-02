@@ -1,5 +1,7 @@
 package net.ericsonj.autoapp.myitemlist;
 
+import android.graphics.Color;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -17,11 +19,12 @@ public class MyItemListDate extends MyItemList{
     private String car;
     private String carId;
     private Date date;
+    private String state;
 
     public MyItemListDate() {
     }
 
-    public MyItemListDate(int imgId, String titleService, String name, String id, String email, String car, String carId, Date date) {
+    public MyItemListDate(int imgId, String titleService, String name, String id, String email, String car, String carId, Date date, String state) {
         this.imgId = imgId;
         this.titleService = titleService;
         this.name = name;
@@ -30,6 +33,7 @@ public class MyItemListDate extends MyItemList{
         this.car = car;
         this.carId = carId;
         this.date = date;
+        this.state = state;
     }
 
     public void setImgId(int imgId) {
@@ -92,6 +96,14 @@ public class MyItemListDate extends MyItemList{
         this.date = date;
     }
 
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String status) {
+        this.state = status;
+    }
+
     @Override
     public int getImgId() {
         return imgId;
@@ -108,5 +120,17 @@ public class MyItemListDate extends MyItemList{
         return carId + "    "+formatter.format(date);
     }
 
+    public int getColor(){
+        if(state.toUpperCase().equals("BOOKING")){
+            return Color.GREEN;
+        }
+        if(state.toUpperCase().equals("FINISH")){
+            return Color.BLUE;
+        }
+        if(state.toUpperCase().equals("FAILED")){
+            return Color.RED;
+        }
+        return Color.BLACK;
+    }
 
 }

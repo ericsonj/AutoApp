@@ -6,25 +6,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.ericsonj.autoapp.elements.ListResponseDate;
-import net.ericsonj.autoapp.elements.ListService;
 import net.ericsonj.autoapp.elements.RequestMessage;
 import net.ericsonj.autoapp.elements.ResponseDate;
-import net.ericsonj.autoapp.elements.Service;
 import net.ericsonj.autoapp.myitemlist.MyItemListDate;
 import net.ericsonj.autoapp.myitemlist.MyItemListIntent;
-import net.ericsonj.autoapp.myitemlist.MyItemListService;
-import net.ericsonj.autoapp.myitemlist.MyListAdapter;
+import net.ericsonj.autoapp.myitemlist.MyListAdapterDate;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -89,7 +84,7 @@ public class ListDateActivity extends AppCompatActivity {
     }
 
     public void loadItemToList(){
-        MyListAdapter adapter = new MyListAdapter(this, list);
+        MyListAdapterDate adapter = new MyListAdapterDate(this, list);
         listDate.setAdapter(adapter);
     }
 
@@ -115,7 +110,7 @@ public class ListDateActivity extends AppCompatActivity {
         LinkedList<ResponseDate> listDate = s.getList();
         list.clear();
         for (ResponseDate rd : listDate){
-            list.add(new MyItemListDate(ServerData.getInstance().getIcon(rd.getService_name()),rd.getService_name(),"","","","",rd.getCar_code(),rd.getDate()));
+            list.add(new MyItemListDate(ServerData.getInstance().getIcon(rd.getService_name()),rd.getService_name(),"","","","",rd.getCar_code(),rd.getDate(),rd.getState()));
         }
         loadItemToList();
     }

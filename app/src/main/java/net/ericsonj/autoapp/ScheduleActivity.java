@@ -181,8 +181,17 @@ public class ScheduleActivity extends AppCompatActivity {
                 selectedDay = getDate(year, monthOfYear + 1, dayOfMonth);
                 Toast.makeText(ScheduleActivity.this, formatDate.format(selectedDay), Toast.LENGTH_SHORT).show();
                 tvDate.setText(formatDate.format(selectedDay));
+                findAvailableHour();
+
             }
         };
+    }
+
+    public void findAvailableHour(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        RequestMessage message = new RequestMessage("OK",dateFormat.format(selectedDay));
+        AsyncTackRESTHour restHour = new AsyncTackRESTHour();
+        restHour.execute(message);
     }
 
     @Override
@@ -190,7 +199,19 @@ public class ScheduleActivity extends AppCompatActivity {
         switch (id) {
             case DATE_DIALOG_ID:
                 // set date picker as current date
-                DatePickerDialog datePickerDialog = new DatePickerDialog(this, datePickerListener, year, month, day);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(this, datePickerListener, year, month, day){
+                    @Override
+                    public void onDateChanged(DatePicker view, int y, int m, int d) {
+                        if (y < year)
+                            view.updateDate(year, month, day);
+
+                        if (m < month && y == year)
+                            view.updateDate(year, month, day);
+
+                        if (d < day && y == year && m == month)
+                            view.updateDate(year, month, day);
+                    }
+                };
                 return datePickerDialog;
         }
         return null;
@@ -279,7 +300,7 @@ public class ScheduleActivity extends AppCompatActivity {
         String carId = etCarId.getText().toString();
         MyTime hour = (MyTime) timeOptions.get(sTime.getSelectedItemPosition()).getObject();
         Date date = addHour(selectedDay, hour.getTime());
-        MyItemListDate itemDate = new MyItemListDate(imgId, title, name, idName, email, car, carId, date);
+        MyItemListDate itemDate = new MyItemListDate(imgId, title, name, idName, email, car, carId, date, "");
         MyItemListIntent data3 = new MyItemListIntent(itemDate);
         setResult(RESULT_OK, data3.getIntent());
 
@@ -356,6 +377,65 @@ public class ScheduleActivity extends AppCompatActivity {
         protected void onPostExecute(ResponseMessage s) {
             Log.v(TAG, "DESPUÉS de CANCELAR la descarga. Se han descarcado " + s + " imágenes. Hilo PRINCIPAL");
             updateList(s);
+        }
+
+        public <Q, A> A connect(String url, Q query, Class<Q> qClazz, Class<A> aClazz) throws IOException {
+
+            ObjectMapper mapper = new ObjectMapper();
+            HttpParams htpp = new BasicHttpParams();
+            HttpConnectionParams.setConnectionTimeout(htpp, 30000);
+            HttpConnectionParams.setSoTimeout(htpp, 30000);
+            HttpClient httpClient = new DefaultHttpClient(htpp);
+            HttpPost post;
+            post = new HttpPost(url);
+            post.setHeader("Content-Type", "application/json");
+            post.setHeader("Accept", "application/json");
+            StringEntity entity = new StringEntity(mapper.writeValueAsString(query), "UTF-8");
+            post.setEntity(entity);
+            HttpResponse resp = httpClient.execute(post);
+            InputStream is = resp.getEntity().getContent();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte array[] = new byte[1024];
+            int readId;
+            while ((readId = is.read(array)) > 0) {
+                bos.write(array, 0, readId);
+            }
+            String strResponse = new String(bos.toByteArray());
+            A respValue = mapper.readValue(strResponse, aClazz);
+            return respValue;
+
+        }
+
+    }
+
+    public void updateListHour(ResponseMessage s){
+        if(s != null){
+            if(s.isIsSuccessful()){
+                Toast.makeText(this, s.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(this, "No agendado, revise que cuente con una conexion de Internet", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public class AsyncTackRESTHour extends AsyncTask<RequestMessage,String,ResponseMessage> {
+
+        @Override
+        protected ResponseMessage doInBackground(RequestMessage... params) {
+            ResponseMessage result = null;
+            try {
+                result =  connect(ServerData.SERVER_URL_REQUESTHOUR, params[0], RequestMessage.class, ResponseMessage.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.v(TAG, e.toString());
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(ResponseMessage s) {
+            Log.v(TAG, "DESPUÉS de CANCELAR la descarga. Se han descarcado " + s + " imágenes. Hilo PRINCIPAL");
+            updateListHour(s);
         }
 
         public <Q, A> A connect(String url, Q query, Class<Q> qClazz, Class<A> aClazz) throws IOException {

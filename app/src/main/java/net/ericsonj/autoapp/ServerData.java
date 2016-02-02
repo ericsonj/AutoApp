@@ -16,11 +16,12 @@ public class ServerData {
     private static ServerData ourInstance = new ServerData();
 
     public static String SERVER = "http://ericsonj.net:8084/";
-    public static String SERVER_LOCAL = "http://192.168.88.252:8084/";
-    public static  String SERVER_URL_ROOT = SERVER+"AutoBookingWeb/rest/autobookingserver/";
+    public static String SERVER_LOCAL = "http://192.168.88.254:8084/";
+    public static  String SERVER_URL_ROOT = SERVER_LOCAL+"AutoBookingWeb/rest/autobookingserver/";
     public static  String SERVER_URL_GETSERVICES = SERVER_URL_ROOT+"requestService";
     public static  String SERVER_URL_BOOKING = SERVER_URL_ROOT+"requestBooking";
     public static  String SERVER_URL_REQUESTDATE = SERVER_URL_ROOT+"requestDate";
+    public static  String SERVER_URL_REQUESTHOUR = SERVER_URL_ROOT+"requestAvailableHour";
 
     public static ServerData getInstance() {
         return ourInstance;
