@@ -5,10 +5,20 @@ package net.ericsonj.autoapp.myspinner;
  */
 public class MyTime {
 
+    long Id;
     int time;
 
-    public MyTime(int time) {
+    public MyTime(long id, int time) {
+        Id = id;
         this.time = time;
+    }
+
+    public long getId() {
+        return Id;
+    }
+
+    public void setId(long id) {
+        Id = id;
     }
 
     public int getTime() {

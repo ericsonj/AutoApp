@@ -31,7 +31,7 @@ public class MyListAdapterService extends ArrayAdapter<MyItemListService> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.my_item_list, null, true);
+        View rowView = inflater.inflate(R.layout.my_item_list_service, null, true);
 
         TextView textViewItemName = (TextView)rowView.findViewById(R.id.textView_itemName);
         ImageView imageViewImgItem =  (ImageView)rowView.findViewById(R.id.imageView_icon);

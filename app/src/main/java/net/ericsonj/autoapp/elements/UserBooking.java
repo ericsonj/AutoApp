@@ -14,11 +14,12 @@ public class UserBooking {
     private String car_brand;
     private String car_dode;
     private Date date;
+    private long availableHourId;
 
     public UserBooking() {
     }
 
-    public UserBooking(long service_id, String name, String document, String email, String car_brand, String car_dode, Date date) {
+    public UserBooking(long service_id, String name, String document, String email, String car_brand, String car_dode, Date date, long availableHourId) {
         this.service_id = service_id;
         this.name = name;
         this.document = document;
@@ -26,7 +27,10 @@ public class UserBooking {
         this.car_brand = car_brand;
         this.car_dode = car_dode;
         this.date = date;
+        this.availableHourId = availableHourId;
     }
+
+
 
     public long getService_id() {
         return service_id;
@@ -83,6 +87,15 @@ public class UserBooking {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public long getAvailableHourId() {
+        return availableHourId;
+    }
+
+    public void setAvailableHourId(long availableHourId) {
+        this.availableHourId = availableHourId;
+    }
+
 
     @Override
     public String toString() {

@@ -2,6 +2,8 @@ package net.ericsonj.autoapp.myitemlist;
 
 import android.graphics.Color;
 
+import net.ericsonj.autoapp.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -97,7 +99,7 @@ public class MyItemListDate extends MyItemList{
     }
 
     public String getState() {
-        return state;
+        return parceState(state);
     }
 
     public void setState(String status) {
@@ -122,15 +124,28 @@ public class MyItemListDate extends MyItemList{
 
     public int getColor(){
         if(state.toUpperCase().equals("BOOKING")){
-            return Color.GREEN;
+            return Color.parseColor("#23BF36");
         }
         if(state.toUpperCase().equals("FINISH")){
-            return Color.BLUE;
+            return Color.parseColor("#594E45");
         }
         if(state.toUpperCase().equals("FAILED")){
-            return Color.RED;
+            return Color.parseColor("#731022");
         }
         return Color.BLACK;
+    }
+
+    public String parceState(String state){
+        if(state.toUpperCase().equals("BOOKING")){
+            return "AGENDADO";
+        }
+        if(state.toUpperCase().equals("FINISH")){
+            return "FINALIZADO";
+        }
+        if(state.toUpperCase().equals("FAILED")){
+            return "FALLIDO";
+        }
+        return "ESTADO DESCONOCIDO";
     }
 
 }

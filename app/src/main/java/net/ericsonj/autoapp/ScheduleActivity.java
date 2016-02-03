@@ -21,8 +21,10 @@ import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.ericsonj.autoapp.elements.ListResponseAHour;
 import net.ericsonj.autoapp.elements.ListService;
 import net.ericsonj.autoapp.elements.RequestMessage;
+import net.ericsonj.autoapp.elements.ResponseAvailableHour;
 import net.ericsonj.autoapp.elements.ResponseMessage;
 import net.ericsonj.autoapp.elements.Service;
 import net.ericsonj.autoapp.elements.UserBooking;
@@ -72,6 +74,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private TextView tvDate;
     private Spinner sTime;
     private SimpleDateFormat formatDate = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("es", "ES"));
+    private SimpleDateFormat formatHour = new SimpleDateFormat("HH:mm:ss");
     private int year;
     private int month;
     private int day;
@@ -94,7 +97,7 @@ public class ScheduleActivity extends AppCompatActivity {
         });
 
         loadServicesOptions();
-        loadTimeOptiones();
+//        loadTimeOptiones();
         loadCarOptions();
         loadCurrentCalendar();
 
@@ -139,17 +142,17 @@ public class ScheduleActivity extends AppCompatActivity {
 
     public void loadTimeOptiones() {
         timeOptions.clear();
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 8 + ":00   -- 24HS", new MyTime(8)));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 9 + ":00   -- 24HS", new MyTime(9)));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 10 + ":00   -- 24HS", new MyTime(10)));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 11 + ":00   -- 24HS", new MyTime(11)));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 12 + ":00   -- 24HS", new MyTime(12)));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 13 + ":00   -- 24HS", new MyTime(13)));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 14 + ":00   -- 24HS", new MyTime(14)));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 15 + ":00   -- 24HS", new MyTime(15)));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 16 + ":00   -- 24HS", new MyTime(16)));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 17 + ":00   -- 24HS", new MyTime(17)));
-        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 18 + ":00   -- 24HS", new MyTime(18)));
+//        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 8 + ":00   -- 24HS", new MyTime(8)));
+//        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 9 + ":00   -- 24HS", new MyTime(9)));
+//        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 10 + ":00   -- 24HS", new MyTime(10)));
+//        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 11 + ":00   -- 24HS", new MyTime(11)));
+//        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 12 + ":00   -- 24HS", new MyTime(12)));
+//        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 13 + ":00   -- 24HS", new MyTime(13)));
+//        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 14 + ":00   -- 24HS", new MyTime(14)));
+//        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 15 + ":00   -- 24HS", new MyTime(15)));
+//        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 16 + ":00   -- 24HS", new MyTime(16)));
+//        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 17 + ":00   -- 24HS", new MyTime(17)));
+//        timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj, 18 + ":00   -- 24HS", new MyTime(18)));
     }
 
     public void loadCarOptions() {
@@ -309,9 +312,9 @@ public class ScheduleActivity extends AppCompatActivity {
         editor.putInt("carItemPosition", sCar.getSelectedItemPosition());
         editor.putString("carId", etCarId.getText().toString());
         editor.commit();
-        Toast.makeText(this, "Información de auto guardada",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Información de auto guardada ",Toast.LENGTH_SHORT).show();
 
-        UserBooking userBooking = new UserBooking(service_id,name,idName,email,car,carId,date);
+        UserBooking userBooking = new UserBooking(service_id,name,idName,email,car,carId,date,hour.getId());
         AsyncTackREST rest = new AsyncTackREST();
         rest.execute(userBooking);
 
@@ -337,6 +340,11 @@ public class ScheduleActivity extends AppCompatActivity {
             Toast.makeText(this, "Debe ingresar la placa del auto.", Toast.LENGTH_LONG).show();
             return false;
         }
+        if (timeOptions.isEmpty()){
+            Toast.makeText(this, "Debe ingresar una fecha", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
 
         return true;
     }
@@ -344,7 +352,7 @@ public class ScheduleActivity extends AppCompatActivity {
     public Date addHour(Date date, int hour) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        cal.add(Calendar.HOUR, hour);
+        cal.add(Calendar.HOUR, (int)hour);
         return cal.getTime();
     }
 
@@ -408,23 +416,26 @@ public class ScheduleActivity extends AppCompatActivity {
 
     }
 
-    public void updateListHour(ResponseMessage s){
-        if(s != null){
-            if(s.isIsSuccessful()){
-                Toast.makeText(this, s.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }else{
-            Toast.makeText(this, "No agendado, revise que cuente con una conexion de Internet", Toast.LENGTH_LONG).show();
+    public void updateListHour(ListResponseAHour s){
+
+        if(s == null){
+            return;
         }
+        timeOptions.clear();
+        for(ResponseAvailableHour aHour : s.getList()){
+            timeOptions.add(new MyItemSpinner(R.drawable.ic_reloj,formatHour.format(aHour.getDatehour()),new MyTime(aHour.getId(),aHour.getDatehour().getHours())));
+        }
+        loadadapterMySpinnerTime();
+
     }
 
-    public class AsyncTackRESTHour extends AsyncTask<RequestMessage,String,ResponseMessage> {
+    public class AsyncTackRESTHour extends AsyncTask<RequestMessage,String,ListResponseAHour> {
 
         @Override
-        protected ResponseMessage doInBackground(RequestMessage... params) {
-            ResponseMessage result = null;
+        protected ListResponseAHour doInBackground(RequestMessage... params) {
+            ListResponseAHour result = null;
             try {
-                result =  connect(ServerData.SERVER_URL_REQUESTHOUR, params[0], RequestMessage.class, ResponseMessage.class);
+                result =  connect(ServerData.SERVER_URL_REQUESTHOUR, params[0], RequestMessage.class, ListResponseAHour.class);
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.v(TAG, e.toString());
@@ -433,7 +444,7 @@ public class ScheduleActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(ResponseMessage s) {
+        protected void onPostExecute(ListResponseAHour s) {
             Log.v(TAG, "DESPUÉS de CANCELAR la descarga. Se han descarcado " + s + " imágenes. Hilo PRINCIPAL");
             updateListHour(s);
         }
