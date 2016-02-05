@@ -7,6 +7,7 @@ import java.util.Date;
  */
 public class ResponseDate {
 
+    private long id;
     private String service_name;
     private String car_code;
     private Date date;
@@ -15,11 +16,20 @@ public class ResponseDate {
     public ResponseDate() {
     }
 
-    public ResponseDate(String service_name, String car_code, Date date, String state) {
+    public ResponseDate(long id, String service_name, String car_code, Date date, String state) {
+        this.id = id;
         this.service_name = service_name;
         this.car_code = car_code;
         this.date = date;
         this.state = state;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getService_name() {
@@ -56,7 +66,7 @@ public class ResponseDate {
 
     @Override
     public String toString() {
-        return "ResponseDate{" + "service_name=" + service_name + ", car_code=" + car_code + ", date=" + date + ", state=" + state + '}';
+        return "ResponseDate{" + "id=" + id + ", service_name=" + service_name + ", car_code=" + car_code + ", date=" + date + ", state=" + state + '}';
     }
 
 }

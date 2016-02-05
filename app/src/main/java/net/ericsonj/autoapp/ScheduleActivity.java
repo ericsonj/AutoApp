@@ -67,9 +67,9 @@ public class ScheduleActivity extends AppCompatActivity {
     private LinearLayout linearLayoutDate;
     private Spinner sService;
     private Spinner sCar;
-    private EditText etName;
-    private EditText etId;
-    private EditText etEmail;
+    private TextView etName;
+    private TextView etId;
+    private TextView etEmail;
     private EditText etCarId;
     private TextView tvDate;
     private Spinner sTime;
@@ -102,9 +102,9 @@ public class ScheduleActivity extends AppCompatActivity {
         loadCurrentCalendar();
 
         sService = (Spinner) findViewById(R.id.spinner_service);
-        etName = (EditText) findViewById(R.id.editText_name);
-        etId = (EditText) findViewById(R.id.editText_id);
-        etEmail = (EditText) findViewById(R.id.editText_email);
+        etName = (TextView) findViewById(R.id.editText_name);
+        etId = (TextView) findViewById(R.id.editText_id);
+        etEmail = (TextView) findViewById(R.id.editText_email);
         sCar = (Spinner) findViewById(R.id.spinner_car);
         etCarId = (EditText) findViewById(R.id.editText_carId);
         tvDate = (TextView) findViewById(R.id.textView_date);

@@ -8,6 +8,8 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_about">
 
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,6 +47,11 @@
     </LinearLayout>
 
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView" >
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,5 +62,6 @@
         android:padding="10dp"
         android:layout_weight="0.01" />
 
+    </ScrollView>
 
 </LinearLayout>
