@@ -130,7 +130,7 @@ public class ScheduleActivity extends AppCompatActivity {
         String sCarId = prefCar.getString("carId","");
         sCar.setSelection(idListCar);
         etCarId.setText(sCarId);
-
+        findAvailableHour();
 
     }
 
@@ -250,11 +250,11 @@ public class ScheduleActivity extends AppCompatActivity {
         }
         if (id == R.id.action_delete) {
             sService.setSelection(0);
-            etName.setText("");
-            etId.setText("");
-            etEmail.setText("");
-            etCarId.setText("");
-            tvDate.setText(dateEs);
+//            etName.setText("");
+//            etId.setText("");
+//            etEmail.setText("");
+//            etCarId.setText("");
+//            tvDate.setText(dateEs);
             sTime.setSelection(0);
         }
 
@@ -420,6 +420,9 @@ public class ScheduleActivity extends AppCompatActivity {
 
         if(s == null){
             return;
+        }
+        if(s.getList().isEmpty()){
+            Toast.makeText(this, "Sin horas disponibles para esta fecha.",Toast.LENGTH_LONG).show();
         }
         timeOptions.clear();
         for(ResponseAvailableHour aHour : s.getList()){
